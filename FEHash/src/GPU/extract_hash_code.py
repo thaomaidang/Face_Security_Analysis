@@ -124,17 +124,14 @@ def process(gpu_X, gpu_weight, gpu_offset, n_components, gpu_w, gpu_b):
     return gpu_pro
 
 ##################################################################################################################################
-path_emb_list = [r'H:\FERET\Face-index\FERET\Face_embedding\Face_Net\test\final_tunable_embeddings_casia_1.txt',
-                 r'H:\FERET\Face-index\FERET\Face_embedding\Face_Net\test\final_tunable_embeddings_casia_2.txt',
-                 r'H:\FERET\Face-index\FERET\Face_embedding\Face_Net\test\final_tunable_embeddings_casia_3.txt',
-                 r'H:\FERET\Face-index\FERET\Face_embedding\Face_Net\test\final_tunable_embeddings_casia_4.txt',
-                 r'H:\FERET\Face-index\FERET\Face_embedding\Face_Net\test\final_tunable_embeddings_casia_5.txt']
+path_emb_list = [r'final_tunable_embeddings_casia_1.txt',
+                 r'final_tunable_embeddings_casia_2.txt',
+                 r'final_tunable_embeddings_casia_3.txt',
+                 r'final_tunable_embeddings_casia_4.txt',
+                 r'final_tunable_embeddings_casia_5.txt']
 
-#path_emb_list = [r'F:\FERET\FERET-different-align\test_set_tunable_score\final_tunable_embeddings.txt',
-#                 r'E:\FEI-data\test_set_tunable_score\final_tunable_embeddings.txt']
 
-#param files
-path_param = r'H:\FERET\Face-index\FERET\result\Face_Net\casia\no_reduce_5120'
+path_param = r'casia_5120'
 
 gamma = 2
 compo = 5120 #adjust
