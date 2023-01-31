@@ -1,10 +1,10 @@
-import numpy as np
-import math
-from scipy import spatial
+#import numpy as np
+#import math
+#from scipy import spatial
 from sklearn import svm
-from sklearn import metrics
+#from sklearn import metrics
 from sklearn.kernel_approximation import RBFSampler
-from time import time
+#from time import time
 import copy
 import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
@@ -63,12 +63,10 @@ def read_emb(path):
     return emb
 
 ############################################################
-#DATASET
-#file nay la file chinh dung de test state-of-the-art
-path = r'C:\Users\ThaoDang\PycharmProjects\LSH-EC\bi_NIST_512_beacon\bi_NIST_1_108000.txt'
-folder = r'D:\EC_LSH\FERET\FERET-different-align\FERET-eye-crop'
-folder_aug = r'D:\EC_LSH\FERET\FERET-different-align\1_14_aug'
-out_folder = r'D:\EC_LSH\FERET\FERET-different-align\save_param\FERET_256_round2'
+path = r'bi_NIST_1_108000.txt'
+folder = r'FERET'
+folder_aug = r'FERET_aug' #augmented pictures
+out_folder = r'result\FERET_256_oneshot'
 
 codes = read_code(path)
 user_list = []
@@ -83,10 +81,10 @@ folders_aug = copy.deepcopy(folders)
 for i in range(len(folders)):
     user_list.append(i)
     output_folders.append(out_folder + '\\' + folders[i])
-    os.mkdir(output_folders[i]) #first time, next time remember to delete this line
-    ref_files.append(folder + '\\' + folders[i] + '\\reference.txt')
-    folders[i] = folder + '\\' + folders[i] + '\embeddings.txt'
-    folders_aug[i] = folder_aug + '\\' + folders_aug[i] + '\embeddings.txt'
+    os.mkdir(output_folders[i])
+    ref_files.append(folder + '\\' + folders[i] + '\\reference.txt') #each suject has multiple pictures, random pic was chosen as enroll picture
+    folders[i] = folder + '\\' + folders[i] + '\embeddings.txt' #to save time, embeddings were extracted and stored
+    folders_aug[i] = folder_aug + '\\' + folders_aug[i] + '\embeddings.txt' #each original pic has 14 augmented pics
 
 for file in ref_files:
     tmp = read_ref(file)
@@ -103,12 +101,12 @@ for file in folders_aug:
 ###########################################################
 #PARAMETER
 
-n_enroll_list = [1]
-n_padding_list = [21] #55
-n_padding_choose = [10] #27
+n_enroll_list = [1] #one shot learning
+n_padding_list = [21] #parameter p in the paper
+n_padding_choose = [10] #parameter q
 
 gamma = 2
-compo_list = [5120]
+compo_list = [5120] #parameter D in the paper
 
 ############################################################
 #RANDOM PADDING
@@ -124,14 +122,13 @@ for compo in compo_list:
                 genuine = user
 
                 reference = ref[genuine]
-                #genuine = 2
                 impostor = copy.deepcopy(user_list)
                 del impostor[genuine]
 
                 padding = random.sample(impostor, k=n_padding_list[n_padding])
 
                 tmp_quantum_key = codes[random.randint(0, 107999)]
-                quantum_key = tmp_quantum_key[:-256]
+                quantum_key = tmp_quantum_key[:-256] #desired key length = 256
 
                 data_impostor = []
                 for imp in impostor:
@@ -161,7 +158,6 @@ for compo in compo_list:
                     data_train = []
 
                     data_test = []
-                    #label_test = []
 
                     choose = set[i]
 
@@ -173,14 +169,12 @@ for compo in compo_list:
                         opposite = 0
 
                     for j in range(n_enroll*14): #train
-                    #for j in range(n_enroll*12):
                         data_train.append(emb_aug[genuine][j])
                         label_train.append(key)
 
                     for j in range(len(emb[genuine])):
                         if(j != reference):
                             data_test.append(emb[genuine][j])
-                            #label_test.append(key)
 
                     for pad in padding:
                         for j in range(n_enroll*14):
@@ -208,7 +202,6 @@ for compo in compo_list:
 
                     Z_test = rbf_feature.fit_transform(data_test)
                     predict = clf.predict(Z_test)
-                    #print(metrics.accuracy_score(label_test, predict))
 
                     ######################################################################################################################
                     Z_impostor = rbf_feature.fit_transform(data_impostor)
