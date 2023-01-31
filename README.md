@@ -1,6 +1,6 @@
 # FEHash: Full Entropy Hash for Face Template Protection
 
-This repo is the official implementation of [FEHash](https://ieeexplore.ieee.org/document/9150849), [patent](https://patents.google.com/patent/US20220158838A1/en)
+This repo is the official implementation of [FEHash](https://ieeexplore.ieee.org/document/9150849) (FEHash [patent](https://patents.google.com/patent/US20220158838A1/en))
 
 ## citation
 
