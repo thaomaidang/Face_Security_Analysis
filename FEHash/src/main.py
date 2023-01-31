@@ -197,8 +197,8 @@ for compo in compo_list:
                     clf.fit(Z_train, label_train)
 
                     state_file.append(state)
-                    coef_file.append(clf.coef_[0])
-                    intercept_file.append(clf.intercept_[0])
+                    coef_file.append(clf.coef_[0]) #w
+                    intercept_file.append(clf.intercept_[0]) #b
 
                     Z_test = rbf_feature.fit_transform(data_test)
                     predict = clf.predict(Z_test)
